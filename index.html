@@ -6,75 +6,58 @@
 <title>Neon Quiz — My School Day</title>
 <style>
   :root{
-    --primary:#55f2ff;
-    --accent:#ffa3ff;
-    --ok:#67ff98;
-    --bad:#ff6b6b;
-    --tile:#ffffffee;
-    --text-dark:#0e1530;
+    --primary:#55f2ff; --accent:#ffa3ff; --ok:#67ff98; --bad:#ff6b6b;
+    --tile:#ffffffee; --text:#0f1a2e; --radius:22px;
+    --panel-w: 700px;
+    --panel-h: auto;
+    --pad: 14px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;background:transparent;color:#e9f7ff;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;display:flex;justify-content:center;align-items:center;padding:26px}
+  body{margin:0;background:transparent;display:flex;align-items:center;justify-content:center;padding:8px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
 
-  .frame{width:min(950px,100%);border-radius:22px;padding:2px;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:0 0 25px rgba(85,242,255,.55),0 0 45px rgba(255,163,255,.4)}
-  .inner{background:transparent;border-radius:20px;overflow:hidden}
+  .frame{width:min(var(--panel-w),100%);border-radius:20px;padding:2px;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:0 0 18px rgba(85,242,255,.55),0 0 32px rgba(255,163,255,.45)}
+  .inner{background:transparent;border-radius:18px;overflow:hidden}
 
-  .stage{padding:26px;min-height:520px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .stage{padding:var(--pad);display:flex;flex-direction:column;justify-content:flex-start}
 
-  .question{background:var(--tile);color:var(--text-dark);padding:26px;border-radius:20px;border:3px solid rgba(85,242,255,.65);box-shadow:0 0 22px rgba(85,242,255,.65);font-size:32px;font-weight:900;margin-bottom:20px;text-align:center;animation:fadeIn .6s ease;width:100%}
-  .answers{display:grid;grid-template-columns:1fr;gap:14px;width:100%}
-  .btn{background:var(--tile);color:var(--text-dark);border:3px solid rgba(85,242,255,.55);box-shadow:0 0 16px rgba(85,242,255,.45);border-radius:20px;padding:22px;font-weight:900;font-size:24px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;width:100%}
-  .btn:hover{transform:scale(1.03);box-shadow:0 0 26px rgba(85,242,255,.75)}
-  .btn.ok{background:linear-gradient(0deg, rgba(103,255,152,.28), #fff);border-color:var(--ok);box-shadow:0 0 26px var(--ok)}
-  .btn.bad{background:linear-gradient(0deg, rgba(255,107,107,.28), #fff);border-color:var(--bad);box-shadow:0 0 26px var(--bad)}
+  .question{background:var(--tile);color:var(--text);padding:10px;border-radius:12px;border:2px solid rgba(85,242,255,.65);box-shadow:0 0 10px rgba(85,242,255,.55);font-size:20px;font-weight:900;text-align:center;margin-bottom:8px}
+  .answers{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:10px}
+  .btn{background:var(--tile);color:var(--text);border:2px solid rgba(85,242,255,.55);box-shadow:0 0 8px rgba(85,242,255,.45);border-radius:10px;padding:10px 12px;font-weight:900;font-size:16px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 0 16px rgba(85,242,255,.8)}
+  .btn.ok{background:linear-gradient(0deg, rgba(103,255,152,.25), #fff);border-color:var(--ok);box-shadow:0 0 16px var(--ok)}
+  .btn.bad{background:linear-gradient(0deg, rgba(255,107,107,.25), #fff);border-color:var(--bad);box-shadow:0 0 16px var(--bad)}
 
-  .primary{padding:24px 48px;border-radius:999px;font-weight:900;font-size:32px;background:linear-gradient(135deg, var(--primary), var(--accent));border:3px solid #fff;color:#fff;text-shadow:0 0 12px rgba(0,0,0,.5);box-shadow:0 0 35px rgba(85,242,255,.8),0 0 35px rgba(255,163,255,.6);cursor:pointer;transition:transform .15s ease;margin:20px auto 0;display:block}
-  .primary:hover{transform:scale(1.1)}
+  .footer{display:flex;justify-content:center;align-items:center;padding:8px;border-top:2px dashed rgba(255,255,255,.25)}
+  .invisible{visibility:hidden}
 
-  .hidden{display:none !important}
-  .center{text-align:center;width:100%}
+  .primary{padding:10px 18px;border-radius:999px;font-weight:900;font-size:18px;background:linear-gradient(135deg,var(--primary),var(--accent));border:2px solid #fff;color:#fff;box-shadow:0 0 20px rgba(85,242,255,.8),0 0 20px rgba(255,163,255,.6)}
+  #btnNext:disabled{filter:blur(2px) opacity(.65);opacity:.6;cursor:not-allowed}
 
-  /* Footer alignment */
-  .footer{display:flex;justify-content:space-between;align-items:center;padding:26px;}
-  .footer button{margin:0}
-  #btnNext:disabled{filter:blur(2px) brightness(0.7);cursor:not-allowed;}
-
-  /* Sparks animation */
-  .sparks{position:absolute;inset:0;pointer-events:none}
-  .spark{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 16px currentColor;animation:pop .7s ease-out forwards}
-  @keyframes pop{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
-
-  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .hidden{display:none!important}
+  .center{text-align:center}
 </style>
 </head>
 <body>
   <div class="frame">
     <div class="inner">
-      <div class="stage" id="stage">
-        <div id="startScreen" class="center">
-          <h2 style="margin:6px 0 14px;font-size:42px">Welcome!</h2>
-          <button class="primary" id="btnStart">Start Quiz</button>
-        </div>
-        <div id="qWrap" class="hidden">
+      <div class="stage" id="panel">
+        <div id="qWrap">
           <div class="question" id="question"></div>
           <div class="answers" id="answers"></div>
         </div>
         <div id="result" class="hidden center">
-          <div style="font-size:28px;margin-bottom:12px">Your score</div>
-          <div id="score" style="font-size:56px;font-weight:900;margin:10px 0;text-shadow:0 0 20px rgba(85,242,255,.6)"></div>
-          <div id="comment" style="font-size:24px;margin-top:10px"></div>
-          <button class="primary" id="btnAgain">Play again</button>
+          <div style="font-size:16px;opacity:.85">Your score</div>
+          <div id="score" style="font-size:28px;font-weight:900;margin:6px 0;text-shadow:0 0 12px rgba(85,242,255,.6)"></div>
+          <div id="comment" style="font-size:16px"></div>
+          <button class="primary" id="btnAgain" style="margin-top:8px">Play again</button>
         </div>
       </div>
-      <div class="footer hidden" id="footer">
-        <div id="feedback" style="font-size:22px"></div>
+      <div class="footer" id="footer">
         <button class="primary" id="btnNext" disabled>Next</button>
       </div>
     </div>
   </div>
-
-  <div class="sparks" id="sparks"></div>
 
 <script>
 const QUESTIONS=[
@@ -90,28 +73,34 @@ const QUESTIONS=[
  {q:"What time does Liam go to bed?",a:["8 o’clock","9 o’clock","10 o’clock"],correct:1}
 ];
 const $=id=>document.getElementById(id);
-const startScreen=$('startScreen'),qWrap=$('qWrap'),answers=$('answers'),question=$('question');
-const btnNext=$('btnNext'),btnStart=$('btnStart'),feedback=$('feedback'),footer=$('footer');
+const qWrap=$('qWrap'),answers=$('answers'),question=$('question');
+const btnNext=$('btnNext'),footer=$('footer');
 const result=$('result'),score=$('score'),comment=$('comment'),btnAgain=$('btnAgain');
-const sparks=$('sparks'),stage=$('stage');
 let idx=0,correctCount=0,answered=false;
 
-function setStageHeight(){
-  const h=stage.offsetHeight;
-  stage.style.minHeight=h+"px";
+function renderQuestion(){
+  const item=QUESTIONS[idx];
+  question.textContent=`Q${idx+1}. ${item.q}`;
+  answers.innerHTML=''; answered=false; btnNext.disabled=true;
+  item.a.forEach((text,i)=>{ const b=document.createElement('button'); b.className='btn'; b.textContent=text; b.onclick=(e)=>onPick(i,b,e); answers.appendChild(b); });
 }
 
-function renderQuestion(){const item=QUESTIONS[idx]; question.textContent=`Q${idx+1}. ${item.q}`; answers.innerHTML=''; answered=false; btnNext.disabled=true; feedback.textContent=''; footer.classList.remove('hidden'); item.a.forEach((text,i)=>{ const b=document.createElement('button'); b.className='btn'; b.textContent=text; b.onclick=(e)=>onPick(i,b,e); answers.appendChild(b); })}
+function burst(x,y,color){
+  for(let i=0;i<14;i++){
+    const s=document.createElement('span');
+    s.style.cssText=`position:fixed;left:${x}px;top:${y}px;width:5px;height:5px;border-radius:50%;background:${color};box-shadow:0 0 10px ${color};pointer-events:none;`;
+    const ang=Math.random()*Math.PI*2,dist=20+Math.random()*40; s.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${Math.cos(ang)*dist}px,${Math.sin(ang)*dist}px) scale(.3)`,opacity:0}],{duration:500,easing:'ease-out'}); document.body.appendChild(s); setTimeout(()=>s.remove(),510);
+  }
+}
 
-function burst(x,y,color){ for(let i=0;i<16;i++){ const s=document.createElement('span'); s.className='spark'; s.style.left=x+'px'; s.style.top=y+'px'; s.style.background=color; s.style.boxShadow=`0 0 16px ${color}`; const ang=Math.random()*Math.PI*2, dist=50+Math.random()*50; s.style.setProperty('--dx',Math.cos(ang)*dist+'px'); s.style.setProperty('--dy',Math.sin(ang)*dist+'px'); sparks.appendChild(s); setTimeout(()=>s.remove(),700); } }
-
-function onPick(i,btn,e){ if(answered) return; answered=true; const item=QUESTIONS[idx], isCorrect=i===item.correct; [...answers.children].forEach((b,bi)=>{ b.disabled=true; if(bi===item.correct) b.classList.add('ok'); if(bi===i && !isCorrect) b.classList.add('bad'); }); const x=e?e.clientX:innerWidth/2, y=e?e.clientY:innerHeight/2; burst(x,y, isCorrect?getComputedStyle(document.documentElement).getPropertyValue('--ok'):getComputedStyle(document.documentElement).getPropertyValue('--bad')); if(isCorrect){ correctCount++; setTimeout(next,900); } else { feedback.innerHTML=`❌ Correct answer: <b>${item.a[item.correct]}</b>`; btnNext.disabled=false; } }
+function onPick(i,btn,e){ if(answered) return; answered=true; const item=QUESTIONS[idx],ok=i===item.correct; [...answers.children].forEach((b,bi)=>{ b.disabled=true; if(bi===item.correct) b.classList.add('ok'); if(bi===i && !ok) b.classList.add('bad'); }); const color=getComputedStyle(document.documentElement).getPropertyValue(ok?'--ok':'--bad'); burst(e?e.clientX:innerWidth/2,e?e.clientY:innerHeight/2,color); if(ok){ correctCount++; setTimeout(next,600); } else { btnNext.disabled=false; }
+}
 
 function next(){ if(idx<QUESTIONS.length-1){ idx++; renderQuestion(); } else finish(); }
-function start(){ idx=0; correctCount=0; result.classList.add('hidden'); qWrap.classList.remove('hidden'); startScreen.classList.add('hidden'); renderQuestion(); }
-function finish(){ qWrap.classList.add('hidden'); result.classList.remove('hidden'); btnNext.disabled=true; score.textContent=`${correctCount}/${QUESTIONS.length}`; const pct=Math.round(correctCount/QUESTIONS.length*100); comment.textContent=pct===100?'Brilliant neon mind! ✨':pct>=70?'Great job! Try again for 100%.':'Keep practicing — you can do it!'; footer.classList.add('hidden'); }
+function start(){ idx=0; correctCount=0; result.classList.add('hidden'); qWrap.classList.remove('hidden'); footer.classList.remove('invisible'); renderQuestion(); }
+function finish(){ qWrap.classList.add('hidden'); result.classList.remove('hidden'); btnNext.disabled=true; footer.classList.add('invisible'); score.textContent=`${correctCount}/${QUESTIONS.length}`; const pct=Math.round(correctCount/QUESTIONS.length*100); comment.textContent=pct===100?'Brilliant neon mind! ✨':pct>=70?'Great job! Try again for 100%.':'Keep practicing — you can do it!'; }
 
-btnStart.onclick=start; btnNext.onclick=next; btnAgain.onclick=start;
+btnNext.onclick=next; btnAgain.onclick=start; start();
 </script>
 </body>
 </html>
